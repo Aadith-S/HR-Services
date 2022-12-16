@@ -1,4 +1,4 @@
-const { companyMaster, employee, workingDays, loginCredentials, attendence, bankAccount, leaveReq, paySlip, Feedback } = require("../../../../Downloads/db (1)");
+const { companyMaster, employee, workingDays, loginCredentials, attendence, bankAccount, leaveReq, paySlip, Feedback } = require("../data/models");
 
 companyMaster.sync();
 employee.sync();

@@ -19,10 +19,28 @@ module.exports = {
             result.json(new ResponseModel(result))
         }
         catch(err){
-            result.json(new ResponseModel(null,null,["Feedback couldn't be created"]));
+            res.json(new ResponseModel(null,null,["Feedback couldn't be created"]));
         }
     },
-    findALlFeedbacks : async(req,res)=>{
-        
+    findAllFeedbacks : async(req,res)=>{
+        const {month,year} = req.body;
+        try{
+            if(month == "" || year == ""){
+                var result = await Feedback.findAll();
+            }
+            else{
+                var result = await Feedback.findAll({where : {
+                    month : month,
+                    year : year
+                }})
+            }
+        }
+        catch(err){
+            res.json(new ResponseModel(null,null,["Error Occured"]))
+        }
+        if(result.length == 0){
+            res.json(new ResponseModel(null,null,["No data found"]));
+        }
+        res.json(new ResponseModel(result));
     }
 }

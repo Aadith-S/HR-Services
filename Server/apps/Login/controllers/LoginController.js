@@ -3,6 +3,7 @@ const token = require("../../../utilities/tokenHandler");
 const {ResponseModel} = require("../../../utilities/responseModel")
 
 module.exports.verifyLogin = (req, res, next) => {
+    console.log(req.body);
     db.loginCredentials.findOne({
         where: { email: req.body.email }
     }).then((result) => {
@@ -11,6 +12,7 @@ module.exports.verifyLogin = (req, res, next) => {
                 role:result.dataValues.role,
                 employee_id:result.dataValues.employee_id
             }
+            console.log(tempObject);
             const tempToken = token.createToken(tempObject)
             res.json(new ResponseModel(tempToken));
         }

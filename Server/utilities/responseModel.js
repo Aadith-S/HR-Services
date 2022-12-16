@@ -16,4 +16,4 @@ class ResponseModel {
     }
 }
 
-module.exports = ResponseModel
+module.exports ={ResponseModel}
