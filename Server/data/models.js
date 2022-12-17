@@ -1,12 +1,12 @@
 const {Sequelize,DataTypes} = require('sequelize');
-const sequelize = new Sequelize("test","root","0000",{
- 
+const sequelize = new Sequelize({
+    username : "root",
     host: 'localhost',
-    dialect:'mysql'
+    dialect:'mysql',
+    password : "pass@123",
+    database : 'test'
 
-});
-
-
+}); 
 const companyMaster = sequelize.define('companyMaster',{
     //(pk in this table is a Fkey in employee table)
     role_id:{
@@ -117,11 +117,11 @@ const leaveReq = sequelize.define('leaveReq', {
         autoIncrement: true
     },
     from:{
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull:false
     },
     to:{
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull:false
     },
     type:{
@@ -133,7 +133,7 @@ const leaveReq = sequelize.define('leaveReq', {
         allowNull:false
     },
     approvalStatus:{
-        type: DataTypes.STRING(1),
+        type: DataTypes.STRING(10),
         allowNull:true
     },
     employee_id:{
@@ -248,11 +248,11 @@ const Feedback = sequelize.define('Feedback',{
             key : "month_id"
         }
     },
-    user_id : {
+    employee_id : {
         type : DataTypes.INTEGER,
         references : {
             model : employee,
-            key : "user_id"
+            key : "employee_id"
         }
     }
 });
@@ -312,6 +312,14 @@ workingDays.hasMany(Feedback,{
 Feedback.belongsTo(workingDays,{
     foreignKey : "month_id",
     targetKey : "month_id"
+});
+employee.hasOne(Feedback,{
+    foreignKey: "employee_id",
+    sourceKey:"employee_id"
+});
+Feedback.belongsTo(employee,{
+    foreignKey : "employee_id",
+    targetKey : "employee_id"
 });
 module.exports = {
     employee,
