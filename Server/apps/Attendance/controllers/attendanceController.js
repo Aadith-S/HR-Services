@@ -1,5 +1,11 @@
-const { employee, attendence, workingDays, leaveReq } = require("../../../data/models");
-const {Sequelize, Op} = require("sequelize");
+const {
+  employee,
+  attendence,
+  workingDays,
+  leaveReq,
+} = require("../../../data/models");
+const { Sequelize, Op } = require("sequelize");
+const { ResponseModel } = require("../../../utilities/responseModel");
 
 module.exports = {
   addAttendance: async (req, res) => {
@@ -7,36 +13,56 @@ module.exports = {
       attributes: ["employee_id"],
     });
     const dates = await workingDays.findAll({
-      attributes: ["month_id","month","year","days"],
+      attributes: ["month_id", "month", "year", "days"],
     });
     emp.forEach((empdata) => {
       dates.forEach(async (date) => {
         var result = await attendence.findOne({
           where: {
             employee_id: empdata.dataValues.employee_id,
-            month_id: dates.dataValues.month_id,
+            month_id: date.dataValues.month_id,
           },
         });
+        console.log(dates);
         if (result) {
           const leaves = await leaveReq.findAll({
-            attributes : [Sequelize.fn("COUNT",Sequelize.col("id"))],
-            where : {
-                employee_id: empdata.dataValues.employee_id,
-                from : { 
-                    [Op.between] : [dates.dataValues.year+"-"+dates.dataValues.month+"01",dates.dataValues.year+"-"+dates.dataValues.month+"-"+dates.dataValues.days]
-                }
-            }
+            attributes: [
+              [Sequelize.fn("COUNT", Sequelize.col("req_id")), "NoOfLeaves"],
+            ],
+            where: {
+              employee_id: empdata.dataValues.employee_id,
+              from: {
+                [Op.between]: [
+                  date.dataValues.year + "-" + date.dataValues.month + "-01",
+                  date.dataValues.year +
+                    "-" +
+                    date.dataValues.month +
+                    "-" +
+                    date.dataValues.days,
+                ],
+              },
+            },
           });
-        //   await attendence.update({
-        //     leaves : leaves.dataValues.COUNT;
-        //   })
-        }
-        else{
-            await attendence.create({
+          console.log(leaves);
+          console.log("in if");
+          await attendence.update(
+            {
+              leaves: leaves[0].dataValues.NoOfLeaves,
+            },
+            {
+              where: {
                 employee_id: empdata.dataValues.employee_id,
-                month_id: dates.dataValues.month_id,
-                leaves: 0,
-              });
+                month_id : date.dataValues.month_id 
+              },
+            }
+          );
+        } else {
+            console.log("in else");
+          await attendence.create({
+            employee_id: empdata.dataValues.employee_id,
+            month_id: date.dataValues.month_id,
+            leaves: 0,
+          });
         }
       });
     });
@@ -56,7 +82,12 @@ module.exports = {
   },
   viewAllAttendanceget: async (req, res, next) => {
     try {
-      const result = await attendence.findAll();
+      const result = await attendence.findAll({
+        include: {
+          model: employee,
+          required: true,
+        },
+      });
       res.json(new ResponseModel(result));
     } catch (err) {}
   },
