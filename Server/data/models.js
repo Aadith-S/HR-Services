@@ -44,7 +44,7 @@ const workingDays = sequelize.define("workingDay", {
   days: {
     type: DataTypes.STRING(3),
     allowNull: false,
-  }
+  },
 });
 const employee = sequelize.define("employee", {
   employee_id: {
@@ -146,35 +146,6 @@ const leaveReq = sequelize.define("leaveReq", {
     },
   },
 });
-
-const paySlip = sequelize.define("paySlip", {
-  pay_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  month: {
-    type: DataTypes.STRING(3),
-    allowNull: false,
-  },
-  year: {
-    type: DataTypes.STRING(4),
-    allowNull: false,
-  },
-  amountPaid: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  employee_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: employee,
-      key: "employee_id",
-    },
-  },
-  //employee_id(Fkey from employee)
-});
-
 const bankAccount = sequelize.define("bankAccount", {
   id: {
     type: DataTypes.INTEGER,
@@ -253,6 +224,25 @@ const Feedback = sequelize.define("Feedback", {
     },
   },
 });
+const paySlip = sequelize.define("paySlip", {
+  pay_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  amountPaid: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  attendence_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: attendence,
+      key: "id",
+    },
+  },
+  //employee_id(Fkey from employee)
+});
 companyMaster.hasMany(employee, {
   foreignKey: "role_id",
   sourceKey: "role_id",
@@ -261,7 +251,6 @@ employee.belongsTo(companyMaster, {
   foreignKey: "role_id",
   targetKey: "role_id",
 });
-
 employee.hasOne(loginCredentials, {
   foreignKey: "employee_id",
   sourceKey: "employee_id",
@@ -317,6 +306,14 @@ employee.hasOne(Feedback, {
 Feedback.belongsTo(employee, {
   foreignKey: "employee_id",
   targetKey: "employee_id",
+});
+attendence.hasOne(paySlip, {
+  foreignKey: "attendence_id",
+  sourceKey: "id",
+});
+paySlip.belongsTo(attendence, {
+  foreignKey: "attendence_id",
+  targetKey: "id",
 });
 module.exports = {
   employee,
