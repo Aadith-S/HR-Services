@@ -53,12 +53,12 @@ module.exports = {
                 model : attendence,
                 required : true,
                 include : [{
-                    model : employee,
-                    required : true,
-                    where : {
-                        employee_id : req.user.employee_id
-                    }
-                }]
+                    model : workingDays,
+                    required : true
+                }],
+                where : {
+                    employee_id : req.user.employee_id
+                }
             }
         })
         res.json(new ResponseModel(result));
