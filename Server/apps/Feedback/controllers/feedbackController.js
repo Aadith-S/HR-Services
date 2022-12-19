@@ -1,22 +1,29 @@
+const { STRING } = require("sequelize");
 const {Feedback, workingDays} = require("../../../data/models");
 const {ResponseModel} = require("../../../utilities/responseModel")
 
 module.exports = {
     addFeedback : async(req,res)=>{
-        const {Feedback,month,year} = req.body;
+        const {feedback} = req.body;
+        const date = new Date();
+        var month =date.getMonth().toString();
+        var year =date.getFullYear().toString();
         var monthId = await workingDays.findOne({
             where : {
                 month : month,
                 year : year
             }
         })
+        console.log(req.user.employee_id);
+        console.log(req.body);
+        console.log(monthId.dataValues.month_id);
         try{
             const result = Feedback.create({
-                Feedback : Feedback,
-                month_id : monthId,
-                user_id : req.user.user_id
+                feedback : feedback,
+                month_id : monthId.dataValues.month_id,
+                employee_id : req.user.employee_id
             })
-            result.json(new ResponseModel(result))
+            res.json(new ResponseModel(result))
         }
         catch(err){
             res.json(new ResponseModel(null,null,["Feedback couldn't be created"]));
