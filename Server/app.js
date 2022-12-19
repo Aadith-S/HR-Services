@@ -7,9 +7,11 @@ const dotEnv = require("dotenv");
 const lerouter = require("./apps/Leave/routes");
 const arouter = require("./apps/Attendance/routes");
 const prouter =  require("./apps/PaySlip/routes")
+const profilerouter = require("./apps/Profile/routes")
 dotEnv.config();
 const app = express();
-
+const cors =require("cors")
+app.use(cors({origin: '*'}));  
 app.use(bodyParser.json({inflate : true}));
 app.use(authMiddleware);
 app.use("/api",frouter);
@@ -17,5 +19,6 @@ app.use("/api",lorouter);
 app.use("/api",lerouter);
 app.use("/api",arouter);
 app.use("/api",prouter);
+app.use("/api",profilerouter);
 
 app.listen(80);
