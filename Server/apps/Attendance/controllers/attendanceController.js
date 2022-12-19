@@ -74,6 +74,10 @@ module.exports = {
         where: {
           employee_id: req.user.employee_id,
         },
+        include : {
+          model : workingDays,
+          required : true
+        }
       });
       res.json(new ResponseModel(result));
     } catch (err) {

@@ -2,7 +2,9 @@ const db = require("../../../data/models");
 const token = require("../../../utilities/tokenHandler");
 const { ResponseModel } = require("../../../utilities/responseModel");
 
-module.exports.verifyLogin = (req, res, next) => {
+module.exports=
+{
+  verifyLogin : (req, res, next) => {
   console.log(req.body);
   db.loginCredentials
     .findOne({
@@ -24,4 +26,17 @@ module.exports.verifyLogin = (req, res, next) => {
     .catch((err) => {
       res.json(new ResponseModel(null, null, ["User not found"]));
     });
+},
+  redirect : (req, res) => {
+    console.log(req.user.role);
+    if(req.user.role == "e"){
+      res.send("/employee/dash");
+    }
+    else if(req.user.role == "m"){
+      res.send("/manager/dash")
+    }
+    else {
+      res.send("/hr/dash")
+    }
+  }
 };
