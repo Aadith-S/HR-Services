@@ -41,6 +41,7 @@ module.exports = {
                     date.dataValues.days,
                 ],
               },
+              approvalStatus : "A2"
             },
           });
           console.log(leaves);

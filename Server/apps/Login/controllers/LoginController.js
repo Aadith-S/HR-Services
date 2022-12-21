@@ -8,7 +8,7 @@ module.exports=
   console.log(req.body);
   db.loginCredentials
     .findOne({
-      where: { email: req.body.email },
+      where: { email: req.body.email ,password: req.body.password },
       include : {
         model : db.roleInfo,
         required : true
