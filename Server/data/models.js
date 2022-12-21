@@ -4,7 +4,7 @@ const sequelize = new Sequelize({
   host: "localhost",
   dialect: "mysql",
   password: "pass@123",
-  database: "test",
+  database: "test1",
 });
 const roleInfo = sequelize.define("roleInfo", {
   role_id : {
@@ -25,7 +25,7 @@ const companyMaster = sequelize.define("companyMaster", {
     autoIncrement: true,
   },
   designation: {
-    type: DataTypes.STRING(5),
+    type: DataTypes.STRING(20),
     allowNull: false,
   },
   monthlyPay: {
@@ -107,7 +107,7 @@ const loginCredentials = sequelize.define("loginCredential", {
     type: DataTypes.STRING(50),
     allowNull: false,
   },
-  role: {
+  role_id: {
     type : DataTypes.INTEGER,
     references : {
       model : roleInfo,
