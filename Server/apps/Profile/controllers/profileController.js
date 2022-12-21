@@ -1,4 +1,4 @@
-const { employee, companyMaster } = require("../../../data/models");
+const { employee, companyMaster, loginCredentials, bankAccount } = require("../../../data/models");
 const { ResponseModel } = require("../../../utilities/responseModel");
 
 module.exports = {
@@ -37,15 +37,28 @@ module.exports = {
             else{
                 sup = superior2.dataValues.superior1;
             }
-            const result = await employee.create({
+            const emp = await employee.create({
                 name : req.body.name,
                 address : req.body.address,
-                department : req.body.department,
+                department : req.body.dept,
                 superior1 : req.body.superior,
                 superior2 : sup,
-                role_id : parseInt(req.body.role_id)
+                role_id : parseInt(req.body.desg_id)
             })
-            return res.json(new ResponseModel(result));
+            
+            await loginCredentials.create({
+                email : req.body.email,
+                password : req.body.password,
+                employee_id : emp.dataValues.employee_id,
+                role_id : parseInt(req.body.role_id)
+            });
+            await bankAccount.create({
+                account_number : req.body.accNo,
+                ifsc : req.body.ifsc,
+                bankName : req.body.BName,
+                employee_id : parseInt(emp.dataValues.employee_id)
+            })
+            return res.json(new ResponseModel("ok"));
         // }
         // catch(err){
         //     console.log("some error");
