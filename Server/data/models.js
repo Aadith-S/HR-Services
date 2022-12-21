@@ -6,6 +6,17 @@ const sequelize = new Sequelize({
   password: "pass@123",
   database: "test",
 });
+const roleInfo = sequelize.define("roleInfo", {
+  role_id : {
+    type : DataTypes.INTEGER,
+    primaryKey : true,
+    autoIncrement : true
+  },
+  role_name : {
+    type : DataTypes.STRING(10),
+    allowNull : false
+  }
+})
 const companyMaster = sequelize.define("companyMaster", {
   //(pk in this table is a Fkey in employee table)
   role_id: {
@@ -97,8 +108,11 @@ const loginCredentials = sequelize.define("loginCredential", {
     allowNull: false,
   },
   role: {
-    type: DataTypes.STRING(2),
-    allowNull: false,
+    type : DataTypes.INTEGER,
+    references : {
+      model : roleInfo,
+      key : "role_id"
+    }
   },
   employee_id: {
     type: DataTypes.INTEGER,
@@ -259,6 +273,14 @@ loginCredentials.belongsTo(employee, {
   foreignKey: "employee_id",
   targetKey: "employee_id",
 });
+roleInfo.hasOne(loginCredentials, {
+  foreignKey: "role_id",
+  sourceKey: "role_id",
+});
+loginCredentials.belongsTo(roleInfo, {
+  foreignKey: "role_id",
+  targetKey: "role_id",
+});
 employee.hasMany(leaveReq, {
   foreignKey: "employee_id",
   sourceKey: "employee_id",
@@ -325,6 +347,7 @@ module.exports = {
   bankAccount,
   attendence,
   Feedback,
+  roleInfo
 };
 
 module.exports.sequelize = sequelize;

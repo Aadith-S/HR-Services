@@ -72,6 +72,10 @@ module.exports = {
                 include : [{
                     model : employee,
                     required : true
+                },
+                {
+                    model : workingDays,
+                    required : true
                 }]
             }
         })

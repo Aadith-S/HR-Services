@@ -87,13 +87,17 @@ module.exports = {
   viewAllAttendanceget: async (req, res, next) => {
     try {
       const result = await attendence.findAll({
-        include: {
+        include: [{
           model: employee,
           required: true,
         },
+      {
+        model : workingDays,
+        required : true
+      }],
       });
       res.json(new ResponseModel(result));
-    } catch (err) {}
+    } catch (err) { res.json(new ResponseModel(null,null,["No data found"]))}
   },
   viewAllAttendancepost: async (req, res, next) => {
     const { month, year } = req.body;

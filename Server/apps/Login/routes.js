@@ -4,6 +4,6 @@ const route = express.Router();
 const lc = require("./controllers/LoginController");
 
 route.post("/login", lc.verifyLogin);
-route.get("/redirect",redirect);
+route.post("/redirect",redirect);
 
 module.exports = route;

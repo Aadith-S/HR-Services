@@ -1,5 +1,5 @@
-const { companyMaster, employee, workingDays, loginCredentials, attendence, bankAccount, leaveReq, paySlip, Feedback } = require("../data/models");
-
+const { companyMaster, employee, workingDays, loginCredentials, attendence, bankAccount, leaveReq, paySlip, Feedback, roleInfo } = require("../data/models");
+roleInfo.sync();
 companyMaster.sync();
 employee.sync();
 workingDays.sync();

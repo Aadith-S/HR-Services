@@ -9,11 +9,15 @@ module.exports=
   db.loginCredentials
     .findOne({
       where: { email: req.body.email },
+      include : {
+        model : db.roleInfo,
+        required : true
+      }
     })
     .then((result) => {
       if (result.dataValues.password == req.body.password) {
         var tempObject = {
-          role: result.dataValues.role,
+          role: result.dataValues.roleInfo.role_name,
           employee_id: result.dataValues.employee_id,
         };
         console.log(tempObject);
@@ -29,10 +33,10 @@ module.exports=
 },
   redirect : (req, res) => {
     console.log(req.user.role);
-    if(req.user.role == "e"){
+    if(req.user.role == "Employee"){
       res.send("/employee/dash");
     }
-    else if(req.user.role == "m"){
+    else if(req.user.role == "Manager"){
       res.send("/manager/dash")
     }
     else {
