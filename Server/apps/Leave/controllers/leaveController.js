@@ -90,6 +90,11 @@ module.exports = {
           superior1: req.user.employee_id,
         },
       },
+      where : {
+        approvalStatus : {
+            [Op.is] : null
+          }
+      }
     });
     const result2 = await leaveReq.findAll({
       include: {
@@ -112,6 +117,7 @@ module.exports = {
   },
   leaveApprovalpost: async (req, res) => {
     const { req_id, status } = req.body;
+    console.log(req.body);
     try {
       await leaveReq.update(
         { approvalStatus: status },
@@ -121,6 +127,9 @@ module.exports = {
           },
         }
       );
-    } catch (err) {}
+      res.json(new ResponseModel("ok"));
+    } catch (err) {
+      res.json(new ResponseModel(null,null,["Error Occured"]));
+    }
   },
 };
