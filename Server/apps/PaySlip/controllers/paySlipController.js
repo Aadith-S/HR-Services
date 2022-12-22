@@ -1,5 +1,5 @@
 const { where } = require("sequelize");
-const { attendence, paySlip, workingDays, employee, companyMaster } = require("../../../data/models");
+const { attendence, paySlip, workingDays, employee, companyMaster, bankAccount } = require("../../../data/models");
 const { ResponseModel } = require("../../../utilities/responseModel");
 function getSal(sal,workingDays,leaves){
     console.log(sal);
@@ -92,6 +92,38 @@ module.exports = {
                     required : true,
                     where : {
                         employee_id : employee_id
+                    }
+                }]
+            }
+        })
+        res.json(new ResponseModel(result));
+    },
+    viewPayslipspost: async(req,res)=>{
+        const {id,month_id} = req.query;
+        const result = await paySlip.findOne({
+            include : {
+                model : attendence,
+                required : true,
+                include : [{
+                    model : employee,
+                    required : true,
+                    where : {
+                        employee_id : id
+                    },
+                    include : [{
+                        model : bankAccount,
+                        required : true
+                    },
+                {
+                    model : companyMaster,
+                    required : true
+                }]
+                },
+                {
+                    model : workingDays,
+                    required : true,
+                    where : {
+                        month_id : month_id
                     }
                 }]
             }
