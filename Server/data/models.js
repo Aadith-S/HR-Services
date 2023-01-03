@@ -104,7 +104,7 @@ const loginCredentials = sequelize.define("loginCredential", {
     unique: true,
   },
   password: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING(100),
     allowNull: false,
   },
   role_id: {
@@ -122,6 +122,10 @@ const loginCredentials = sequelize.define("loginCredential", {
       key: "employee_id",
     },
   },
+    otp : {
+      type : DataTypes.BIGINT,
+      allowNull : true
+    }
   //employee_id is a Fkey in this table
   //(unique, null not allowed)
 });

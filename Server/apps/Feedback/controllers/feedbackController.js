@@ -19,12 +19,13 @@ module.exports = {
         console.log(req.body);
         console.log(monthId);
         try{
-            const result = Feedback.create({
+            const result = await Feedback.create({
                 feedback : feedback,
                 month_id : monthId.dataValues.month_id,
                 employee_id : req.user.employee_id
             })
-            res.json(new ResponseModel(result))
+            console.log(result);
+            res.json(new ResponseModel(result));
         }
         catch(err){
             res.json(new ResponseModel(null,null,["Feedback couldn't be created"]));
