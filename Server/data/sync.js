@@ -9,4 +9,4 @@ bankAccount.sync();
 leaveReq.sync();
 paySlip.sync();
 Feedback.sync();
-loginCredentials.sync();
+loginCredentials.sync({alter : true});

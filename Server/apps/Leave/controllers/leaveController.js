@@ -10,14 +10,32 @@ module.exports = {
     const { from, to, type, reason } = req.body;
     console.log(req.user.employee_id);
     try {
-      const result = await leaveReq.create({
-        from: from,
-        to: to,
-        type: type,
-        reason: reason,
-        employee_id: req.user.employee_id,
+      const leaves = await leaveReq.findOne({
+        where : {
+          employee_id : req.user.employee_id,
+          from : from,
+          to : to,
+          [Op.or] : [{
+            approvalStatus : "A2"
+          },{
+          approvalStatus : null
+        },{
+          approvalStatus : "A1"
+        }]
+        }
       });
-      res.json(new ResponseModel(result));
+      if(!leaves){
+        const result = await leaveReq.create({
+          from: from,
+          to: to,
+          type: type,
+          reason: reason,
+          employee_id: req.user.employee_id,
+        });
+        res.json(new ResponseModel(result));
+      }else{
+        res.json(new ResponseModel(null,null,['Leave Request Already Active']))
+      }
     } catch (err) {
       res.json(
         new ResponseModel(null, null, ["Leave couldn't be created", err])
